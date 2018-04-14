@@ -14,7 +14,7 @@ namespace codecoolkrakow
     public static class HttpRetrieveOrder
     {
         [FunctionName("HttpRetrieveOrder")]
-        public static async System.Threading.Tasks.Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, 
+        public static async System.Threading.Tasks.Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, 
             [Table("Orders", Connection = "StorageConnection")]CloudTable orderTable, TraceWriter log)
         {
             string fileName = req.Query["fileName"];
