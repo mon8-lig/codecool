@@ -12,17 +12,21 @@ namespace codecoolkrakow
     public static class HttpOrderFormSave
     {
         [FunctionName("HttpOrderFormSave")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, TraceWriter log)
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req,
+            [Table("Orders", Connection = "StarageConnection")]ICollector<PhotoOrder> orderTable, TraceWriter log)
         {
-            PhotoOrder orderData = null;
-            try
+           try
             {
                 string requestBody = new StreamReader(req.Body).ReadToEnd();
-                orderData = JsonConvert.DeserializeObject<PhotoOrder>(requestBody);
+                PhotoOrder orderData = JsonConvert.DeserializeObject<PhotoOrder>(requestBody);
+                orderData.PartitionKey = System.DateTime.UtcNow.DayOfYear.ToString();
+                orderData.RowKey = orderData.FileName;
+                orderTable.Add(orderData);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return new BadRequestObjectResult("Received data invalid");
+                log.Error("Something went wrong", ex);
+                return new BadRequestObjectResult("Something went wrong");
             }
             return (ActionResult)new OkObjectResult($"Order processed");
         }
