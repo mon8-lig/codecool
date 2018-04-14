@@ -13,7 +13,7 @@ namespace codecoolkrakow
     {
         [FunctionName("HttpOrderFormSave")]
         public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req,
-            [Table("Orders", Connection = "StarageConnection")]ICollector<PhotoOrder> orderTable, TraceWriter log)
+            [Table("Orders", Connection = "StorageConnection")]ICollector<PhotoOrder> orderTable, TraceWriter log)
         {
            try
             {
