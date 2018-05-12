@@ -8,7 +8,6 @@ using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace codecoolkrakow
 {
@@ -28,20 +27,13 @@ namespace codecoolkrakow
             if (resultList.Any())
             {
                 var firstElement = resultList.First();
-                string[] resulotions = firstElement.Resolutions.Split(',');
-                List<PictureResizeRequest> requests = new List<PictureResizeRequest>();
-
-                foreach (var resolution in resulotions)
+                return new JsonResult(new
                 {
-                    string[] resParams = resolution.Split('x');
-                    requests.Add(new PictureResizeRequest()
-                    {
-                        FileName = firstElement.FileName,
-                        RequiredWidth = System.Int32.Parse(resParams[0]),
-                        RequiredHeight = System.Int32.Parse(resParams[1])
-                    });
-                }
-                return new JsonResult(new { requests, firstElement.CustomerEmail });
+                    firstElement.CustomerEmail,
+                    firstElement.FileName,
+                    firstElement.RequiredHeight,
+                    firstElement.RequiredWidth
+                });
             }
 
             return new NotFoundResult();
